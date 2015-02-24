@@ -7,6 +7,9 @@ package fr.epsi.beans;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * Classe qui represente l'utilisateur
  * 
@@ -14,7 +17,8 @@ import java.util.UUID;
 public class User {
 
     private final int id;           // l'identifiant de l'utilisateur 
-    private final String username;  // Son nom d'utilisateur    
+    private final String username;  // Son nom d'utilisateur
+    @JsonIgnore
     private final String password;  // Le mot de passe de l'utilisateur
     private UUID guid;              // le token utilisateur
 
@@ -52,7 +56,7 @@ public class User {
     public UUID getGUID() {
         return guid;
     }
-
+    
     public String getUsername() {
         return username;
     }

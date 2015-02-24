@@ -5,13 +5,18 @@
  */
 package fr.epsi.controllers.rest;
 
+import javax.servlet.http.HttpServletResponse;
+
 import fr.epsi.beans.User;
 import fr.epsi.models.Users;
+
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 /**
  * Controller pour se logger
@@ -25,9 +30,9 @@ public class LoginController {
      * @param password le password de l'utilisateur
      * @return Un message statut de la connexion
      */
-    @RequestMapping(value = "/connect/{username}/{password}", method = RequestMethod.GET)
+    @RequestMapping(value = "/connect", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    String connect(@PathVariable("username") String username, @PathVariable("password") String password) {
+    User connect(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse resp) {
 
         try {
             Users userModel = Users.getInstance();
@@ -36,27 +41,30 @@ public class LoginController {
             
             // On retourne le guuid de l'utilisateur
             if (user.getPassword().equals(password)) {
-                return user.generateGUID().toString();
+            	user.generateGUID();
+                return user;
             }
 
         } catch (Exception e) {
             
         }
-        return "Bad login or password";
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return null;
     }
 
     /**
      * Methode qui deconnecte un utilisateur
      * @param guid le guid de l'utilisateur connecte
      */
-    @RequestMapping(value = "/disconnect/{guid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/disconnect", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    void disconnect(@PathVariable("guid") String guid) {
+    void disconnect(@RequestParam("token") String token) {
 
         try {
             // On recupère l'instance et on la supprime
             Users userModel = Users.getInstance();
-            userModel.findByGUID(guid).clearGUID();
+            userModel.findByGUID(token).clearGUID();
+          //TODO : HttpResponse
         } catch (Exception e) {
 
         }

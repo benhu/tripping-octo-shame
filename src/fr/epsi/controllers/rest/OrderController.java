@@ -8,10 +8,11 @@ package fr.epsi.controllers.rest;
 import fr.epsi.beans.Product;
 import fr.epsi.models.Products;
 import fr.epsi.models.Users;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -28,42 +29,47 @@ public class OrderController {
      * @param guid l'identifiant de l'utilisateur
      * @return Un message selon le statut de la commande
      */
-    @RequestMapping(value = "/order/{reference}/{quantity}/{guid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    String order(@PathVariable("reference") String reference, @PathVariable("quantity") int quantity, @PathVariable("guid") String guid) {
+    Product order(@RequestParam("reference") String reference, @RequestParam("quantity") int quantity, @RequestParam("token") String token) {
 
-        String msg;                              // le message a retourner
-        Users userModel = Users.getInstance();   //Recupere l'insatnce de user
+        Users userModel = Users.getInstance();   //Recupere l'instance de user
 
         try {
             // Si on trouve un user correspondant au guid
-            if (userModel.findByGUID(guid) != null) {
+            if (userModel.findByGUID(token) != null) {
                 Products productModel = Products.getInstance();
                 
                 // On recupere le produit par reference
                 Product product = productModel.findByRef(reference);
 
                 if (product == null) {
-                    msg = "Produit inexistant";
+                	//TODO : HttpResponse
+                    //msg = "Produit inexistant";
                 } else if (quantity <= 0) {
-                    msg = "Erreur de quantité";
+                	//TODO : HttpResponse
+                    //msg = "Erreur de quantité";
                 } else if (product.getQuantity() == 0) {
-                    msg = "Produit épuisé";
+                	//TODO : HttpResponse
+                    //msg = "Produit épuisé";
                 } else if (product.getQuantity() < quantity) {
-                    msg = "Quantité insuffisante";
+                	//TODO : HttpResponse
+                    //msg = "Quantité insuffisante";
                 } else {
                     //On decremente la quantite du produit
                     product.setQuantity(product.getQuantity() - quantity);
-
-                    msg = "Produit commandé !";
+                    
+                    return new Product(product.getReference(),product.getName(),quantity);
                 }
             } else {
-                msg = "User not found";
+            	//TODO : HttpResponse
+                //msg = "User not found";
             }
         } catch (Exception e) {
-            msg = "Error";
+        	//TODO : HttpResponse
+        	//msg = "Error";
         }
 
-        return msg;
+        return null;
     }
 }
