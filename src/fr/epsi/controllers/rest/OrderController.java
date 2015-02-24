@@ -5,9 +5,12 @@
  */
 package fr.epsi.controllers.rest;
 
+import javax.servlet.http.HttpServletResponse;
+
 import fr.epsi.beans.Product;
 import fr.epsi.models.Products;
 import fr.epsi.models.Users;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +34,7 @@ public class OrderController {
      */
     @RequestMapping(value = "/order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    Product order(@RequestParam("reference") String reference, @RequestParam("quantity") int quantity, @RequestParam("token") String token) {
+    Product order(@RequestParam("reference") String reference, @RequestParam("quantity") int quantity, @RequestParam("token") String token, HttpServletResponse resp) {
 
         Users userModel = Users.getInstance();   //Recupere l'instance de user
 
@@ -43,18 +46,8 @@ public class OrderController {
                 // On recupere le produit par reference
                 Product product = productModel.findByRef(reference);
 
-                if (product == null) {
-                	//TODO : HttpResponse
-                    //msg = "Produit inexistant";
-                } else if (quantity <= 0) {
-                	//TODO : HttpResponse
-                    //msg = "Erreur de quantité";
-                } else if (product.getQuantity() == 0) {
-                	//TODO : HttpResponse
-                    //msg = "Produit épuisé";
-                } else if (product.getQuantity() < quantity) {
-                	//TODO : HttpResponse
-                    //msg = "Quantité insuffisante";
+                if (product == null || quantity <= 0 || product.getQuantity() == 0 || product.getQuantity() < quantity) {
+                	resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {
                     //On decremente la quantite du produit
                     product.setQuantity(product.getQuantity() - quantity);
@@ -62,14 +55,12 @@ public class OrderController {
                     return new Product(product.getReference(),product.getName(),quantity);
                 }
             } else {
-            	//TODO : HttpResponse
-                //msg = "User not found";
+            	resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
+            return null;
         } catch (Exception e) {
-        	//TODO : HttpResponse
-        	//msg = "Error";
+        	resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        	return null;
         }
-
-        return null;
     }
 }

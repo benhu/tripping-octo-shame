@@ -76,7 +76,7 @@ public class Users {
         UUID uuid = UUID.fromString(guid);
 
         for (User user : this.userList) {
-            if (user.getGUID().equals(uuid)) {
+            if (user.getGUID() != null && user.getGUID().equals(uuid)) {
                 return user;
             }
         }

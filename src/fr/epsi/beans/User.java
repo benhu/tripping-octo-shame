@@ -8,7 +8,6 @@ package fr.epsi.beans;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Classe qui represente l'utilisateur

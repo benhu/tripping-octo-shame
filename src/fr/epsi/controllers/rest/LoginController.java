@@ -44,12 +44,14 @@ public class LoginController {
             	user.generateGUID();
                 return user;
             }
+            
+            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return null;
 
         } catch (Exception e) {
-            
+        	resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return null;
         }
-        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        return null;
     }
 
     /**
@@ -58,15 +60,22 @@ public class LoginController {
      */
     @RequestMapping(value = "/disconnect", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    void disconnect(@RequestParam("token") String token) {
+    void disconnect(@RequestParam("token") String token, HttpServletResponse resp) {
 
         try {
             // On recupère l'instance et on la supprime
             Users userModel = Users.getInstance();
-            userModel.findByGUID(token).clearGUID();
-          //TODO : HttpResponse
+            User user = userModel.findByGUID(token);
+            
+            if(user != null){
+            	user.clearGUID();
+            	
+            	resp.setStatus(HttpServletResponse.SC_OK);
+            }else{
+            	resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            }
         } catch (Exception e) {
-
+        	resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
