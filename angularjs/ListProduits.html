@@ -1,35 +1,62 @@
-<div>
-	Login : <input ng-model="querylogin">
-	Mot de passe : <input ng-model="querymdp">
-	<input type="submit" value="Se connecter">
-</div>
-<div class="container-fluid">
-	  <div class="row">
-	    <div class="col-md-2">
-	      <!--Sidebar content-->
-
-	      	Search: <input ng-model="query">
-		Sort by:
-		<select ng-model="orderProp">
-		  <option value="name">Alphabetical</option>
-		  <option value="quantity">Quantity</option>
-		</select>
-
-	    </div>
-	    <div class="col-md-10">
-	      <!--Body content-->
-              	<ul class="produits">
-		  <li ng-repeat="produit in produits | filter:query | orderBy:orderProp" class="thumbnail">
-		    <a href="#/produits/{{produit.reference}}">{{produit.name}}</a>
-		    <p>
-			Quantité : 
-			<input type="number" name="Quantité">
-			restante : {{produit.quantity}}
-			<input type="submit" value="Commander">
-		    </p>
-		  </li>
-		</ul>
-
-	    </div>
-	  </div>
-</div>
+<!doctype html>
+<html lang="en" ng-app>
+    <head>
+        <meta charset="utf-8">
+        <title>Product list</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/angular.min.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/controllers.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+	        <div class="row">
+                <div class="col-md-6">
+                    <div class="form-inline">
+                        <div class="form-group col-sm-4">
+                            <label for="inputLogin">Login</label>
+                            <input type="text" id="inputLogin" class="form-control" ng-model="querylogin">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" id="inputPassword" class="form-control" ng-model="querymdp">
+                        </div>
+                        <div class="col-sm-3">
+    	                    <input type="submit" class="btn btn-primary" value="Se connecter">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+	            <div class="col-md-6">
+	                <!--Sidebar content-->
+                    <div class="form-inline">
+                        <div class="form-group col-sm-4">
+                            <label for="inputSearch">Search</label>
+                            <input type="text" id="inputSearch" class="form-control" ng-model="query">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="selectSort">Sort by</label>
+                            <select id="selectSort" class="form-control" ng-model="orderProp">
+                                <option value="name">Alphabetical</option>
+                                <option value="quantity">Quantity</option>
+                            </select>
+                        </div>
+                    </div>
+	            </div>
+                <div class="col-md-6">
+                    <!--Body content-->
+                    <ul class="produits">
+		                <li ng-repeat="produit in produits | filter:query | orderBy:orderProp" class="thumbnail">
+                            <a href="#/produits/{{produit.reference}}">{{produit.name}}</a>
+                            <p>Quantité :<input type="number" name="Quantité">restante : {{produit.quantity}}<input type="submit" value="Commander"></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
