@@ -96,7 +96,7 @@
         <div class="row">
           <div class="col-md-12">
             <h3 class="text-center">
-              <a href="#/produits/{{produit.reference}}">{{produit.name}}</a>
+              <a data-reference="{{produit.reference}}" href="#/produits/{{produit.reference}}">{{produit.name}}</a>
             </h3>
           </div>
         </div>
@@ -105,7 +105,7 @@
             <div class="form-inline">
               <div class="form-group">
                 <label for="quantity_{{$id}}">Quantity : </label>
-                <input type="number" id="quantity_{{$id}}" class="form-control" name="Quantité">
+                <input type="number" ng-model="produit.number" id="quantity_{{$id}}" class="form-control" name="Quantité">
               </div>
             </div>
           </div>
@@ -118,7 +118,7 @@
             </div>
           </div>
           <div class="col-md-2 text-center">
-            <button type="submit" class="btn btn-danger" ng-click="orderProduct(produit.reference);"> <span class="glyphicon glyphicon-shopping-cart"></span> Commander
+            <button type="submit" class="btn btn-danger" data-dismiss="alert" ng-click="orderProduct(produit.reference);"> <span class="glyphicon glyphicon-shopping-cart"></span> Commander
             </button>
           </div>
         </div>
