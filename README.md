@@ -2,7 +2,9 @@
 ## REST
 ### Authentification
 #### URL
-`/rest/connect/{username}/{password}`
+`/rest/connect?login=usernam&password=pwd` POST
+`/rest/product` GET
+`/rest/product?reference=ref&quantity=qty&token=authtoken` POST
 
 #### Annotations
 
@@ -38,7 +40,7 @@ Si l'un des paramètres ne satisfait pas ses conditions, une erreur est envoyée
 
 
 # Architecture
-## WSCompanyA
+## WSProvider
 Service Provider.
 
 ### Packages
@@ -64,6 +66,9 @@ S'occupe de l'authentification des utilisateurs.
 ###### OrderController
 S'occupe de la gestion des commandes de produits.
 
+###### ProductController
+Gère la récupération de la liste des produits
+
 ##### SOAP
 ###### IProductController
 Interface du contrôleur des produits (pour récupérer la liste des produits).
@@ -78,22 +83,20 @@ Singleton représentant les données, ie les produits disponibles.
 ##### Users
 Singleton représentant les utilisateurs de l'application.
 
-### Paramétrages
+## Angular client
+### Routes
+Single page app: /produits
 
-## WSCompanyB
-Client application.
+La liste des produits s'affiche, puis une erreur est levée en cas de commande
+si l'utilisateur n'est pas connecté.
 
-### Packages
-##### User
-Représente un utilisateur :
-* id
-* login
-* mot de passe
-* guid
+### Controllers
+#### Product
+Gère la gestion des produits.
+Initialise la liste en appelant `/rest/product` GET
+Lors d'un clic sur le bouton Order, poste le formulaire.
 
-##### Main
-S'occupe de faire les appels à l'application publiant les services grâce à 
-RestTemplate.
+#### Login
+Permet de connecter l'utilisateur, et de récupérer le token dans un cookie.
 
-### Paramétrages
-URL en dur.
+
